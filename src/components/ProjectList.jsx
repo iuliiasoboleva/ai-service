@@ -1,21 +1,28 @@
 "use client";
 import React from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faEye,
+  faDownload,
+  faSpinner,
+  faTrash,
+  faPlus,
+} from "@fortawesome/free-solid-svg-icons";
 
-function ProjectList({ projects, handleViewProject, handleDownloadReport, isDownloading }) {
+function ProjectList({ projects, handleViewProject, handleDownloadReport, handleDeleteReport, isDownloading, setShowNewProject }) {
   return (
     <div className="bg-white rounded-lg shadow-md p-6">
-      {/* Заголовок и кнопка "Новый проект" */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
         <h2 className="text-2xl font-bold font-montserrat mb-4 md:mb-0">Мои проекты</h2>
         <button
-          className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 font-roboto w-full md:w-auto"
+          onClick={() => setShowNewProject(true)}
+          className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 font-roboto w-full md:w-auto flex items-center justify-center min-w-[140px] min-h-[40px]"
         >
-          <i className="fas fa-plus mr-2"></i>
+          <FontAwesomeIcon icon={faPlus} className="mr-2 w-4 h-4 text-sm" />
           Новый проект
         </button>
       </div>
 
-      {/* Таблица проектов */}
       <div className="overflow-x-auto">
         <table className="min-w-full">
           <thead>
@@ -51,46 +58,43 @@ function ProjectList({ projects, handleViewProject, handleDownloadReport, isDown
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap font-roboto">
                   <span
-                    className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                      project.status === "completed"
-                        ? "bg-green-100 text-green-800"
-                        : "bg-yellow-100 text-yellow-800"
-                    }`}
+                    className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${project.status === "completed"
+                      ? "bg-green-100 text-green-800"
+                      : "bg-yellow-100 text-yellow-800"
+                      }`}
                   >
                     {project.status === "completed" ? "Завершен" : "Анализ"}
                   </span>
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium space-x-3">
-                  {project.status === "completed" ? (
-                    <>
-                      <button
-                        onClick={() => handleViewProject(project)}
-                        className="text-blue-600 hover:text-blue-700"
-                      >
-                        <i className="fas fa-eye"></i>
+                <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                  <div className="flex justify-end space-x-3">
+                    {project.status === "completed" ? (
+                      <>
+                        <button
+                          onClick={() => handleViewProject(project)}
+                          className="bg-gray-200 text-blue-600 hover:bg-blue-700 hover:text-white w-10 h-10 rounded-full flex items-center justify-center"
+                        >
+                          <FontAwesomeIcon icon={faEye} />
+                        </button>
+                        <button
+                          onClick={() => handleDownloadReport(project)}
+                          className={`bg-gray-200 text-green-600 hover:bg-green-700 hover:text-white w-10 h-10 rounded-full flex items-center justify-center ${isDownloading ? "opacity-50 cursor-not-allowed" : "cursor-pointer"
+                            }`}
+                        >
+                          <FontAwesomeIcon icon={faDownload} />
+                        </button>
+                      </>
+                    ) : (
+                      <button className="bg-gray-200 text-gray-400 w-10 h-10 rounded-full flex items-center justify-center">
+                        <FontAwesomeIcon icon={faSpinner} spin />
                       </button>
-                      <button
-                        onClick={() => handleDownloadReport(project)}
-                        disabled={isDownloading}
-                        className={`text-green-600 hover:text-green-700 ${
-                          isDownloading ? "opacity-50 cursor-not-allowed" : ""
-                        }`}
-                      >
-                        <i
-                          className={`fas ${
-                            isDownloading ? "fa-spinner fa-spin" : "fa-download"
-                          }`}
-                        ></i>
-                      </button>
-                    </>
-                  ) : (
-                    <span className="text-gray-400">
-                      <i className="fas fa-spinner fa-spin"></i>
-                    </span>
-                  )}
-                  <button className="text-red-600 hover:text-red-700">
-                    <i className="fas fa-trash"></i>
-                  </button>
+                    )}
+                    <button
+                      onClick={() => handleDeleteReport(project)}
+                      className="bg-gray-200 text-red-600 hover:bg-red-700 hover:text-white w-10 h-10 rounded-full flex items-center justify-center">
+                      <FontAwesomeIcon icon={faTrash} />
+                    </button>
+                  </div>
                 </td>
               </tr>
             ))}

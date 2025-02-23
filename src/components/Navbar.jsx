@@ -1,5 +1,6 @@
 "use client";
 import { useState, useEffect, useRef } from "react";
+import Cookies from "js-cookie";
 import { useRouter } from "next/navigation";
 
 function Navbar({ userInfo }) {
@@ -28,7 +29,7 @@ function Navbar({ userInfo }) {
 
   // Функция разлогина
   const handleLogout = () => {
-    localStorage.removeItem("token");
+    Cookies.remove("token");
     router.push("/login");
   };
 
